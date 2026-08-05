@@ -1,0 +1,26 @@
+kubeStateMetrics:
+  enabled: true
+zabbixAgent:
+  enabled: false
+zabbixProxy:
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+      - ALL
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+  env:
+  - name: ZBX_SERVER_HOST
+    value: 100.82.84.112
+  - name: ZBX_HOSTNAME
+    value: zabbix-proxy-k8s-dev-ubestrefa
+  - name: ZBX_CACHESIZE
+    value: 1024M
+  - name: ZBX_STARTHTTPPOLLERS
+    value: 102
+  - name: ZBX_STARTPOLLERS
+    value: 1
+  image:
+    tag: alpine-7.0.1

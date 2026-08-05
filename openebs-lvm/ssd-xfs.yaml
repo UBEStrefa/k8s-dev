@@ -1,0 +1,14 @@
+allowVolumeExpansion: true
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ssd-xfs
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+parameters:
+  fsType: xfs
+  storage: lvm
+  volgroup: ssd-lvmvg
+provisioner: local.csi.openebs.io
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer

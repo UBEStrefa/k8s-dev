@@ -1,0 +1,56 @@
+controller:
+  admissionWebhooks:
+    createSecretJob:
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        seccompProfile:
+          type: RuntimeDefault
+    patch:
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        seccompProfile:
+          type: RuntimeDefault
+  config:
+    log-format-upstream: $remote_addr:$remote_port - - [$time_local] $ssl_protocol/$ssl_cipher
+      "$request" $status $request_length $bytes_sent upstream $upstream_response_time
+      request $request_time UA "$http_user_agent" [$host via $upstream_addr status
+      $upstream_status] $proxy_upstream_name $proxy_alternative_upstream_name
+  image:
+    allowPrivilegeEscalation: false
+  ingressClass: internal
+  ingressClassResource:
+    controllerValue: k8s.io/ingress-nginx-internal
+    default: true
+    enabled: true
+    name: internal
+  metrics:
+    enabled: true
+    service:
+      annotations:
+        prometheus.io/scrape: "true"
+  podSecurityContext:
+    allowPrivilegeEscalation: false
+    seccompProfile:
+      type: RuntimeDefault
+  replicaCount: 3
+  resources:
+    limits:
+      cpu: 2
+      memory: 4Gi
+    requests:
+      cpu: 151m
+      memory: 1Gi
+  service:
+    annotations:
+      metallb.universe.tf/address-pool: internal
+      metallb.universe.tf/allow-shared-ip: internal
+    externalTrafficPolicy: Local
+    loadBalancerIP: 172.17.100.239
+  watchIngressWithoutClass: true
+fullnameOverride: ingress-nginx-internal

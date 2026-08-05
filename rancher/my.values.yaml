@@ -1,0 +1,10 @@
+hostname: rancherdev.srv.ubestrefa.pl
+ingress:
+  extraAnnotations:
+    cert-manager.io/cluster-issuer: ubestrefa-issuer
+  ingressClassName: internal
+  tls:
+    source: secret
+privateCA: false
+features: managed-system-upgrade-controller=false
+

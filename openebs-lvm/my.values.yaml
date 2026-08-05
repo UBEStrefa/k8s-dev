@@ -1,0 +1,31 @@
+engines:
+  replicated:
+    mayastor:
+      enabled: false
+  local:
+    zfs:
+      enabled: false
+    # Wyłącza subchart localpv-provisioner (hostpath) — używamy tylko LVM.
+    hostpath:
+      enabled: false
+# Stos logowania OpenEBS (loki + alloy, razem z podrzędnym minio) — niepotrzebny.
+loki:
+  enabled: false
+  localpvScConfig:
+    enabled: false
+alloy:
+  enabled: false
+# CRD-y VolumeSnapshot dostarcza już rke2-snapshot-controller-crd (kube-system);
+# bez tego helm przerywa instalację na "invalid ownership metadata".
+openebs-crds:
+  csi:
+    volumeSnapshots:
+      enabled: false
+lvm-localpv:
+  crds:
+    lvmLocalPv:
+      enabled: true
+    csi:
+      volumeSnapshots:
+        enabled: false
+

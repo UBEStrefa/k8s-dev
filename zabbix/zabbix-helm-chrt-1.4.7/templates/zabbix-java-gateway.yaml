@@ -1,0 +1,75 @@
+{{- if .Values.zabbixJavaGateway.enabled }}
+apiVersion: {{ template "zabbix.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ template "zabbix.javaGateway.fullname" . }}
+  labels:
+    app: zabbix
+    tier: java-gateway
+spec:
+  selector:
+    matchLabels:
+      name: {{ template "zabbix.javaGateway.fullname" . }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: {{ template "zabbix.javaGateway.fullname" . }}
+        app: zabbix
+    spec:
+      containers:
+        - name: {{ template "zabbix.javaGateway.fullname" . }}
+          image: "{{ .Values.zabbixJavaGateway.image.repository }}:{{ .Values.zabbixJavaGateway.image.tag }}"
+          imagePullPolicy: {{ .Values.zabbixJavaGateway.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.zabbixJavaGateway.service.port }}
+              protocol: TCP
+              name: zabbix-jmx
+          {{- if .Values.zabbixJavaGateway.livenessProbe.enabled }}
+          livenessProbe: {{- omit .Values.zabbixJavaGateway.livenessProbe "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          {{- if .Values.zabbixJavaGateway.readinessProbe.enabled }}
+          readinessProbe: {{- omit .Values.zabbixJavaGateway.readinessProbe "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          {{- if .Values.zabbixJavaGateway.startupProbe.enabled }}
+          startupProbe: {{- omit .Values.zabbixJavaGateway.startupProbe "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          {{- with  .Values.zabbixJavaGateway.resources }}
+          resources:
+            {{ toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.zabbixJavaGateway.extraVolumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.zabbixJavaGateway.containerSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          env:
+            {{- range .Values.zabbixJavaGateway.env }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+
+      {{- with .Values.zabbixJavaGateway.tolerations }}
+      tolerations:
+        {{ toYaml . | indent 6 }}
+      {{- end }}
+      {{- with .Values.zabbixJavaGateway.affinity }}
+      affinity:
+        {{ toYaml . | indent 6 }}
+      {{- end }}
+      {{- with .Values.zabbixJavaGateway.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | indent 8 }}
+      {{- end }}
+      {{- range .Values.zabbixJavaGateway.image.pullSecrets }}
+      imagePullSecrets:
+        - name: {{ . | quote }}
+      {{- end }}
+      {{- with .Values.zabbixJavaGateway.extraVolumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
