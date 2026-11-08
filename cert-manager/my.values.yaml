@@ -1,4 +1,9 @@
 crds:
   enabled: true
   keep: true
-
+# DNS-01 self-check tylko przez publiczne resolvery (Cloudflare jest autorytatywny dla ubestrefa.pl).
+# Wymagane przy wewnętrznej strefie srv.ubestrefa.pl na FW (split-horizon) – inaczej cert-manager
+# pyta wewnętrzny DNS, nie widzi TXT _acme-challenge i odnowienia utkną.
+extraArgs:
+  - --dns01-recursive-nameservers-only
+  - --dns01-recursive-nameservers=1.1.1.1:53,8.8.8.8:53
