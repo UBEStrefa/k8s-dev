@@ -1,0 +1,40 @@
+controller:
+  allowSnippetAnnotations: "true"
+  config:
+    annotations-risk-level: "Critical"
+    log-format-upstream: $remote_addr:$remote_port - - [$time_local] $ssl_protocol/$ssl_cipher
+      "$request" $status $request_length $bytes_sent upstream $upstream_response_time
+      request $request_time UA "$http_user_agent" [$host via $upstream_addr status
+      $upstream_status] $proxy_upstream_name $proxy_alternative_upstream_name
+  image:
+    allowPrivilegeEscalation: false
+  ingressClass: external
+  ingressClassResource:
+    controllerValue: k8s.io/ingress-nginx-external
+    default: false
+    enabled: true
+    name: external
+  metrics:
+    enabled: true
+    service:
+      annotations:
+        prometheus.io/scrape: "true"
+  replicaCount: 3
+  resources:
+    limits:
+      cpu: 2
+      memory: 4Gi
+    requests:
+      cpu: 151m
+      memory: 1Gi
+  service:
+    annotations:
+      metallb.universe.tf/address-pool: external
+    externalTrafficPolicy: Local
+    loadBalancerIP: 172.17.100.238
+    nodePorts:
+      http: "31767"
+      https: "31533"
+    type: LoadBalancer
+  watchIngressWithoutClass: false
+fullnameOverride: ingress-nginx-external
