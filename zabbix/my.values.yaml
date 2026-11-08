@@ -12,8 +12,13 @@ zabbixProxy:
     seccompProfile:
       type: RuntimeDefault
   env:
+  # Tryb pasywny: serwer Zabbix (tailnet) łączy się z proxy przez FW A/B (źródło .5/.4).
+  # ZBX_SERVER_HOST = dozwolone źródła; przy externalTrafficPolicy Cluster Cilium robi SNAT
+  # na adres węzła albo cilium_host z sieci podów. Z zewnątrz ogranicza loadBalancerSourceRanges.
+  - name: ZBX_PROXYMODE
+    value: 1
   - name: ZBX_SERVER_HOST
-    value: 100.82.84.112
+    value: 172.17.100.0/24,10.42.0.0/16
   - name: ZBX_HOSTNAME
     value: zabbix-proxy-k8s-dev-ubestrefa
   - name: ZBX_CACHESIZE
@@ -24,3 +29,10 @@ zabbixProxy:
     value: 1
   image:
     tag: alpine-7.0.1
+  service:
+    type: LoadBalancer
+    loadBalancerIP: 172.17.100.247
+    loadBalancerSourceRanges:
+    - 172.17.100.0/28
+    annotations:
+      metallb.universe.tf/address-pool: zabbix

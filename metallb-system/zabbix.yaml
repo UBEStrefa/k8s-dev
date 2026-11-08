@@ -1,0 +1,22 @@
+# zabbix-proxy w trybie pasywnym: serwer Zabbix (tailnet) -> FW A/B -> ten adres :10051.
+# autoAssign: false – adres tylko dla serwisu, który jawnie wskaże pulę.
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: zabbix
+  namespace: metallb-system
+spec:
+  addresses:
+  - 172.17.100.247/32
+  autoAssign: false
+  avoidBuggyIPs: false
+
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: zabbix
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+  - zabbix
