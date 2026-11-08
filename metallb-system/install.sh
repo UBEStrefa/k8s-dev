@@ -14,4 +14,4 @@ helm upgrade --install "$RELEASE_NAME" "$CHART_PATH" \
 # Subchart frr-k8s jest wyłączony (frrk8s.enabled=false w my.values.yaml),
 # CRD-y wchodzą z subchartu crds.
 echo "Gotowe. Pule adresów i L2Advertisement aplikuj osobno:"
-echo "  kubectl apply -f auto.yaml -f external.yaml -f internal.yaml"
+echo "  kubectl apply -f external.yaml -f internal.yaml -f zabbix.yaml"
