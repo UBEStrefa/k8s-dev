@@ -16,7 +16,9 @@ controller:
           - ALL
         seccompProfile:
           type: RuntimeDefault
+  allowSnippetAnnotations: "true"
   config:
+    annotations-risk-level: "Critical"
     log-format-upstream: $remote_addr:$remote_port - - [$time_local] $ssl_protocol/$ssl_cipher
       "$request" $status $request_length $bytes_sent upstream $upstream_response_time
       request $request_time UA "$http_user_agent" [$host via $upstream_addr status
